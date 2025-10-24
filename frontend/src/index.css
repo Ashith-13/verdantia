@@ -1,0 +1,228 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap');
+
+/* ---------- Design tokens ---------- */
+:root{
+  --brand: #16a34a;
+  --brand-2: #22c55e;
+  --ink: #0f172a;
+  --muted: #475569;
+  --bg: #f8fafc;
+  --card: #ffffff;
+  --border: #e5e7eb;
+  --success: #16a34a;
+  --success-200: #bbf7d0;
+  --success-50: #f0fdf4;
+}
+
+* { box-sizing: border-box; }
+
+html, body, #root {
+  height: 100%;
+}
+
+body{
+  margin: 0;
+  font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  color: var(--ink);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.container { max-width: 1200px; margin: 0 auto; padding: 12px; }
+
+/* Links */
+a { cursor: pointer; color: var(--brand); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+/* ---------- Top nav ---------- */
+nav{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 8px 0 16px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 12px;
+}
+.badge{
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: var(--success-50);
+  color: #065f46;
+  border: 1px solid var(--success-200);
+  font-weight: 700;
+  font-size: 12px;
+}
+
+/* ---------- Hero ---------- */
+.hero h1{
+  font-size: 28px;
+  font-weight: 900;
+  margin: 8px 0 6px;
+}
+.hero p{
+  margin: 0 0 8px;
+  color: var(--muted);
+}
+
+/* ---------- Cards & sections ---------- */
+.card{
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 16px;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+}
+.section{ margin-top: 16px; }
+.section-title h4{ margin: 0 0 8px; }
+
+/* ---------- Grid helpers ---------- */
+.grid{ display: grid; gap: 12px; }
+@media (min-width: 900px){
+  /* common 2-col layout used across dashboard sections */
+  .grid{ grid-template-columns: 1.1fr 1fr; }
+}
+
+/* ---------- KPI strip ---------- */
+.kpis{
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 12px;
+  margin: 12px 0;
+}
+.kpi{
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 14px;
+}
+.kpi .label{ color: var(--muted); font-size: 12px; }
+.kpi .value{ font-weight: 800; font-size: 18px; }
+
+/* ---------- Buttons ---------- */
+button{
+  appearance: none;
+  border: 1px solid var(--border);
+  background: #fff;
+  color: var(--ink);
+  padding: 10px 14px;
+  border-radius: 12px;
+  font-weight: 800;
+  cursor: pointer;
+}
+button:hover{ filter: brightness(0.98); }
+button:active{ transform: translateY(1px); }
+
+button.primary{
+  border: none;
+  background: linear-gradient(90deg, var(--brand), var(--brand-2));
+  color: #fff;
+}
+
+/* ---------- Progress bar ---------- */
+.progress{
+  height: 8px;
+  background: #e5e7eb;
+  border-radius: 999px;
+  overflow: hidden;
+}
+.progress > span{
+  display: block;
+  height: 100%;
+  background: linear-gradient(90deg, var(--brand), var(--brand-2));
+  border-radius: 999px;
+}
+
+/* ---------- Map shell ---------- */
+.map-shell{
+  height: 260px;
+  border: 1px dashed #a7f3d0;
+  border-radius: 12px;
+  overflow: hidden;
+  margin-top: 8px;
+  background: #fff;
+}
+
+/* ---------- Tables ---------- */
+table{ width: 100%; border-collapse: collapse; background: #fff; }
+thead th{
+  text-align: left;
+  background: #f1f5f9;
+  color: #0f172a;
+  font-weight: 800;
+  font-size: 13px;
+  padding: 10px;
+  border-bottom: 1px solid var(--border);
+}
+tbody td{
+  padding: 10px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+}
+tbody tr:hover{ background: #fafafa; }
+
+/* ---------- Gov cards ---------- */
+.gov-card{
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 14px;
+}
+.gov-card .meta{
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--muted);
+  font-size: 13px;
+  margin: 4px 0;
+}
+.pill{
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: var(--success-50);
+  border: 1px solid var(--success-200);
+  color: #065f46;
+  font-weight: 700;
+  font-size: 12px;
+}
+
+/* ---------- Subtle text ---------- */
+.subtle{ color: var(--muted); }
+
+/* ---------- Sticky CTA: Let's Play & Learn ---------- */
+.cta-play-learn{
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  z-index: 9999;
+  padding: 18px 28px;
+  font-size: 18px;
+  font-weight: 900;
+  border: none;
+  border-radius: 14px;
+  cursor: pointer;
+  background: linear-gradient(90deg, var(--brand), var(--brand-2));
+  color: #fff;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.15), inset 0 -2px 0 rgba(0,0,0,0.08);
+  transition: transform .15s ease, box-shadow .15s ease, opacity .15s ease;
+}
+.cta-play-learn:hover{ transform: translateY(-1px) scale(1.02); }
+.cta-play-learn:active{ transform: translateY(0) scale(0.99); }
+@media (max-width: 640px){
+  .cta-play-learn{
+    left: 16px; right: 16px; bottom: 16px;
+    width: auto;
+    font-size: 16px;
+    padding: 16px 20px;
+  }
+}

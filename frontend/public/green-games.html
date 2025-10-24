@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Green Games — White & Green Theme</title>
+  <style>
+    /* ================= WHITE + GREEN THEME ================= */
+    :root{
+      --bg:#f7faf9;
+      --surface:#ffffff;
+      --ink:#102a12;
+      --muted:#4b6350;
+      --border:#e6f0e8;
+      --primary:#16a34a; /* green */
+      --primary-ink:#062b11;
+      --accent:#059669;
+      --danger:#b91c1c;
+      --shadow:0 10px 24px rgba(16,42,18,.08);
+      --radius:16px;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      background:
+        radial-gradient(800px 400px at 10% -10%, #e9f7ef 0, transparent 40%),
+        radial-gradient(800px 400px at 90% -10%, #e9f7ef 0, transparent 40%),
+        var(--bg);
+      color:var(--ink);
+      font:15px/1.45 system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+    }
+    a{color:var(--accent);text-decoration:none}
+    a:hover{text-decoration:underline}
+
+    .topbar{
+      position:sticky;top:0;z-index:10;
+      background:var(--surface);
+      border-bottom:1px solid var(--border);
+      display:flex;align-items:center;justify-content:space-between;
+      padding:14px 18px;box-shadow:0 2px 0 rgba(0,0,0,0.02);
+    }
+    .topbar h1{margin:0;font-size:18px;letter-spacing:.3px}
+    .topbar nav a{margin-left:12px;padding:8px 12px;border-radius:10px}
+    .topbar nav a.active{background:#e7f7ec;color:#064e26}
+
+    .container{max-width:1100px;margin:28px auto;padding:0 18px}
+
+    .panel{
+      background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);
+      box-shadow:var(--shadow);padding:18px;
+    }
+    .row{display:grid;gap:18px}
+    .row.cols-2{grid-template-columns:repeat(2,minmax(0,1fr))}
+    @media(max-width:920px){.row.cols-2{grid-template-columns:1fr}}
+
+    .btn{
+      display:inline-flex;align-items:center;justify-content:center;
+      background:#eaf7ef;color:#064e26;border:1px solid #cfead7;
+      padding:10px 14px;border-radius:10px;cursor:pointer
+    }
+    .btn.primary{background:var(--primary);border-color:#10a342;color:#f0fff6;font-weight:600}
+    .btn.danger{background:#fee2e2;border-color:#fecaca;color:#7f1d1d}
+    .btn:disabled{opacity:.6;cursor:not-allowed}
+    .kpi{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;background:#f0f7f2;border:1px solid var(--border);border-radius:10px;margin-right:8px}
+    .kpi b{font-size:18px}
+    .legend{font-size:13px;color:var(--muted)}
+
+    /* HOME */
+    .hero{display:grid;grid-template-columns:1.1fr .9fr;gap:22px;align-items:center}
+    .hero h2{font-size:28px;margin:8px 0 6px}
+    .hero p{color:var(--muted);margin:0 0 16px}
+    .hero-cta{display:flex;gap:10px;flex-wrap:wrap}
+    .lg-illus{min-height:280px;border-radius:var(--radius);border:1px dashed #cfead7;background:linear-gradient(180deg,#f3fbf6,#ffffff);display:grid;place-items:center;box-shadow:var(--shadow)}
+    .badge{display:inline-flex;align-items:center;gap:8px;padding:6px 10px;background:#e7f7ec;border:1px solid #cfead7;border-radius:999px;color:#064e26;font-size:13px}
+
+    /* MATCH */
+    .grid-match{display:grid;gap:12px;grid-template-columns:repeat(4,minmax(0,1fr))}
+    @media(max-width:800px){.grid-match{grid-template-columns:repeat(2,minmax(0,1fr))}}
+    .card{position:relative;height:120px;perspective:800px;cursor:pointer}
+    .card-inner{position:absolute;inset:0;transform-style:preserve-3d;transition:transform .45s}
+    .card.flipped .card-inner{transform:rotateY(180deg)}
+    .card-face{position:absolute;inset:0;border-radius:14px;border:1px solid var(--border);background:#f7fbf8;display:grid;place-items:center;padding:10px;text-align:center;backface-visibility:hidden}
+    .card-face.front{background:linear-gradient(180deg,#ffffff,#f3fbf6)}
+    .card-face.back{transform:rotateY(180deg);background:#ffffff;border-color:#cfead7}
+    .card-face .tt{font-weight:700}
+    .card-face .sub{color:var(--muted);font-size:13px}
+
+    .toast{position:fixed;bottom:18px;right:18px;z-index:20;background:#064e26;color:#eafff1;border:1px solid #0a6e36;border-radius:12px;padding:10px 14px;box-shadow:var(--shadow);display:none}
+    .toast.show{display:block;animation:floatUp .6s ease}
+    @keyframes floatUp{from{transform:translateY(8px);opacity:0}to{transform:translateY(0);opacity:1}}
+
+    /* PLANT */
+    .toolbar{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
+    .palette{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+    @media(max-width:900px){.palette{grid-template-columns:repeat(2,minmax(0,1fr))}}
+    .chip{user-select:none;background:#f0f7f2;color:#064e26;border:1px solid #cfead7;padding:10px;border-radius:12px;cursor:grab;text-align:center;font-size:13px}
+    .chip:active{cursor:grabbing}
+    .grid-plant{--rows:6;--cols:8;display:grid;gap:8px;grid-template-columns:repeat(var(--cols),minmax(0,1fr));grid-auto-rows:68px;background:#f6fbf7;border:1px dashed #cfead7;border-radius:12px;padding:10px}
+    .cell{display:grid;place-items:center;border:1px solid var(--border);border-radius:10px;background:#ffffff;font-size:26px;color:#9aa9a1}
+    .cell.grow1{background:#e9f7ef}
+    .cell.grow2{background:#dbf2e7}
+    .cell.grow3{background:#d1fae5;border-color:#a7f3d0}
+    .cell.dead{background:#fff7f7;border-color:#fecaca;color:#ef4444}
+
+    .modal{position:fixed;inset:0;background:rgba(0,0,0,.35);display:none;align-items:center;justify-content:center;z-index:30}
+    .modal .modal-card{width:min(560px,92vw);background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:16px;box-shadow:var(--shadow)}
+    .modal.show{display:flex}
+    .modal h3{margin:10px 0 4px}
+    .modal p{color:var(--muted)}
+
+    .foot{padding:18px;margin-top:18px;color:var(--muted);text-align:center}
+    .mt-8{margin-top:8px}.mt-12{margin-top:12px}.mt-16{margin-top:16px}.mb-0{margin-bottom:0}.center{text-align:center}
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <h1>🌿 Green Games</h1>
+    <nav>
+      <a href="#/home" id="nav-home">Home</a>
+      <a href="#/match" id="nav-match">Tree Match Quiz</a>
+      <a href="#/plant" id="nav-plant">Plant &amp; Survive</a>
+    </nav>
+  </header>
+
+  <main id="app" class="container"></main>
+
+  <footer class="foot">© 2025 Verdantia Labs — Educate. Verify. Incentivize.</footer>
+
+  <script type="module">
+    /* =================== DATA =================== */
+    const SPECIES = [
+      {id:"neem",name:"Neem (Azadirachta indica)",native:true,badges:["native","urban-friendly"],benefits:["Air purification","Mosquito deterrent","Drought tolerant"],facts:["Neem is used in traditional medicine and natural pest control.","Mature neem can sequester CO₂ and provide urban shade."],explain:"Widely native to the Indian subcontinent; supports urban biodiversity when sited correctly."},
+      {id:"peepal",name:"Peepal (Ficus religiosa)",native:true,badges:["native","sacred fig"],benefits:["High oxygen exchange","Microclimate cooling","Bird habitat"],facts:["Peepal is culturally significant and hosts diverse fauna."],explain:"A native fig; excellent for shade and microhabitat—needs space and proper siting."},
+      {id:"banyan",name:"Banyan (Ficus benghalensis)",native:true,badges:["native","megacanopy"],benefits:["Massive shade","Soil stabilization","Urban cooling"],facts:["India's national tree; iconic aerial roots."],explain:"Native canopy tree that creates microhabitats; needs large open space."},
+      {id:"jamun",name:"Jamun (Syzygium cumini)",native:true,badges:["native","fruiting"],benefits:["Edible fruit","Urban shade","Pollinator support"],facts:["Popular in urban avenues; seasonal fruit beloved across India."],explain:"Native, resilient avenue tree with ecological and dietary benefits."},
+      {id:"arjun",name:"Arjun (Terminalia arjuna)",native:true,badges:["native","riparian"],benefits:["Riverbank stabilization","Medicinal bark","Bird habitat"],facts:["Often planted along water bodies; strong buttressed trunk."],explain:"Native riparian species; stabilizes banks and supports fauna."},
+      {id:"amaltas",name:"Amaltas (Cassia fistula)",native:true,badges:["native","ornamental"],benefits:["Pollinator host","Seasonal yellow blooms","Urban aesthetics"],facts:["Also called Golden Shower; excellent nectar source in bloom."],explain:"Native ornamental with high pollinator value."},
+      {id:"mango",name:"Mango (Mangifera indica)",native:true,badges:["native","fruiting"],benefits:["Edible fruit","Shade canopy","Cultural heritage"],facts:["A staple of Indian orchards; long-lived and iconic."],explain:"Native fruit tree; supports pollinators and people."},
+      // Teaching: non-native/invasive
+      {id:"eucalyptus",name:"Eucalyptus (Eucalyptus spp.)",native:false,badges:["non-native"],benefits:["Fast growth (context-dependent)"],facts:["Australian genus; water-demand can stress dry regions."],explain:"Exotic; often discouraged in dry catchments for groundwater concerns."},
+      {id:"prosopis",name:"Prosopis juliflora (Vilayati babul)",native:false,badges:["invasive"],benefits:["Hardy under stress"],facts:["Allelopathic; forms dense thickets; reduces understory diversity."],explain:"Introduced; invasive in many Indian drylands—outcompetes natives."},
+      {id:"subabul",name:"Subabul (Leucaena leucocephala)",native:false,badges:["non-native","potentially invasive"],benefits:["Fast growth, fodder"],facts:["Can escape cultivation and alter local plant communities."],explain:"Exotic; can become invasive without controls."},
+      {id:"conocarpus",name:"Conocarpus (Conocarpus erectus)",native:false,badges:["non-native"],benefits:["Rapid screening"],facts:["Linked to allergy concerns in some Indian cities when planted widely."],explain:"Exotic ornamental; increasingly discouraged for urban biodiversity plans."},
+      {id:"paperMulberry",name:"Paper Mulberry (Broussonetia papyrifera)",native:false,badges:["invasive"],benefits:["Fast canopy"],facts:["Strong allergen; invasive in urban woodlands and riparian strips."],explain:"Allergenic and invasive—avoid; replace with natives."},
+      {id:"silverOak",name:"Silver Oak (Grevillea robusta)",native:false,badges:["non-native"],benefits:["Timber, ornamental"],facts:["Australian origin; not a biodiversity substitute for native canopy."],explain:"Exotic timber tree; limited habitat value compared to natives."}
+    ];
+    const MATCH_PAIRS=[
+      {id:"neem",label:"Neem",benefit:"Air purification",fact:"Neem leaves and bark are used in natural pest control."},
+      {id:"peepal",label:"Peepal",benefit:"Oxygen & cooling",fact:"Peepal supports diverse epiphytes and urban fauna."},
+      {id:"banyan",label:"Banyan",benefit:"Shade & microhabitat",fact:"Banyan's aerial roots create habitat layers."},
+      {id:"jamun",label:"Jamun",benefit:"Edible fruit",fact:"Jamun avenues offer seasonal fruit and shade."},
+      {id:"arjun",label:"Arjun",benefit:"Riverbank stabilization",fact:"Arjun's buttressed roots reduce erosion."},
+      {id:"amaltas",label:"Amaltas",benefit:"Pollinator host",fact:"Golden flowers are nectar-rich for bees."},
+      {id:"mango",label:"Mango",benefit:"Shade canopy",fact:"Mango orchards are long-lived carbon sinks."}
+    ];
+    const speciesById=id=>SPECIES.find(s=>s.id===id);
+
+    /* =================== FRAMEWORK/ROUTER =================== */
+    const app=document.getElementById('app');
+    function setActiveNav(hash){
+      ['nav-home','nav-match','nav-plant'].forEach(id=>document.getElementById(id)?.classList.remove('active'));
+      if(hash.startsWith('#/match')) document.getElementById('nav-match')?.classList.add('active');
+      else if(hash.startsWith('#/plant')) document.getElementById('nav-plant')?.classList.add('active');
+      else document.getElementById('nav-home')?.classList.add('active');
+    }
+    function route(){
+      const hash=location.hash||'#/home';
+      setActiveNav(hash);
+      if(hash==="#/home") renderHome();
+      else if(hash.startsWith('#/match')) renderMatch();
+      else if(hash.startsWith('#/plant')) renderPlant();
+      else renderHome();
+    }
+    window.addEventListener('hashchange',route);
+    window.addEventListener('load',route);
+
+    /* =================== HOME =================== */
+    function renderHome(){
+      app.innerHTML = `
+        <section class="row cols-2">
+          <div class="panel hero">
+            <div>
+              <span class="badge">We plant smarter, not just more.</span>
+              <h2>Hands-on urban forestry training</h2>
+              <p>Play two bite-size games to internalize what matters: native-first choices, survival rates, and real ecosystem value.</p>
+              <div class="hero-cta">
+                <a class="btn primary" href="#/match">Play Tree Match Quiz</a>
+                <a class="btn" href="#/plant">Launch Plant &amp; Survive</a>
+              </div>
+              <p class="mt-12 legend">Track your score; share a screenshot with your community drive.</p>
+            </div>
+            <div class="lg-illus">
+              <div class="center">
+                <div style="font-size:72px">🌱🌿🌳</div>
+                <div class="legend">Native-first beats greenwashing, every time.</div>
+              </div>
+            </div>
+          </div>
+          <div class="panel">
+            <h2 class="mb-0">What you’ll learn</h2>
+            <ul>
+              <li><b>Native vs non-native:</b> survival and biodiversity multipliers.</li>
+              <li><b>Right tree, right place:</b> water demand, space, shade, allelopathy.</li>
+              <li><b>Verification mindset:</b> map evidence, survival tracking, incentives.</li>
+            </ul>
+            <div class="mt-8"><a class="btn" href="#/match">Start with Tree Match →</a></div>
+          </div>
+        </section>
+      `;
+    }
+
+    /* =================== MATCH GAME =================== */
+    const MATCH_BEST_KEY='gg_match_best_v2';
+    function shuffle(a){a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+    function buildDeck(){
+      const cards=[];
+      for(const p of MATCH_PAIRS){
+        cards.push({kind:'species',id:p.id,label:p.label});
+        cards.push({kind:'benefit',id:p.id,label:p.benefit});
+      }
+      return shuffle(cards);
+    }
+    function renderMatch(){
+      const deck=buildDeck();
+      let first=null, lock=false, matches=0, score=0;
+      const best=Number(localStorage.getItem(MATCH_BEST_KEY)||0);
+      app.innerHTML=`
+        <section class="panel">
+          <h2>Tree Match Quiz</h2>
+          <div class="legend">Flip cards and match the <b>species</b> to its <b>benefit</b>. Every correct match unlocks a <b>fun fact</b>.</div>
+          <div class="mt-12">
+            <span class="kpi">Matches: <b id="m-matches">0</b> / ${MATCH_PAIRS.length}</span>
+            <span class="kpi">Score: <b id="m-score">0</b></span>
+            <span class="kpi">Best: <b id="m-best">${best}</b></span>
+            <button class="btn" id="m-reset">Reset</button>
+          </div>
+          <div class="grid-match mt-12" id="m-grid"></div>
+        </section>
+        <div class="toast" id="m-toast"></div>
+      `;
+      const grid=app.querySelector('#m-grid');
+      const toast=app.querySelector('#m-toast');
+      function showToast(t){toast.textContent=t;toast.classList.add('show');setTimeout(()=>toast.classList.remove('show'),1600)}
+      function updateKpis(){
+        app.querySelector('#m-matches').textContent=matches;
+        app.querySelector('#m-score').textContent=score;
+        if(score>Number(localStorage.getItem(MATCH_BEST_KEY)||0)){
+          localStorage.setItem(MATCH_BEST_KEY,String(score));
+          app.querySelector('#m-best').textContent=score;
+        }
+      }
+      function cardEl(i,c){
+        const el=document.createElement('div');el.className='card';el.dataset.index=String(i);
+        el.innerHTML=`
+          <div class="card-inner">
+            <div class="card-face front"><div class="tt">?</div></div>
+            <div class="card-face back"><div><div class="tt">${c.label}</div><div class="sub">${c.kind==='species'?'Species':'Benefit'}</div></div></div>
+          </div>`;
+        el.addEventListener('click',()=>onFlip(el,c));
+        return el;
+      }
+      function onFlip(el,c){
+        if(lock||el.classList.contains('done'))return;
+        el.classList.add('flipped');
+        if(!first){first={el,c};return;}
+        lock=true;
+        const second={el,c};
+        const ok=(first.c.id===second.c.id)&&(first.c.kind!==second.c.kind);
+        if(ok){
+          setTimeout(()=>{
+            first.el.classList.add('done');second.el.classList.add('done');
+            first.el.style.opacity='0.6';second.el.style.opacity='0.6';
+            matches+=1;score+=10;
+            const pair=MATCH_PAIRS.find(p=>p.id===c.id);
+            showToast('✅ '+pair.label+': '+pair.fact);
+            updateKpis();lock=false;first=null;
+          },350);
+        }else{
+          setTimeout(()=>{
+            first.el.classList.remove('flipped');second.el.classList.remove('flipped');
+            score=Math.max(0,score-2);updateKpis();lock=false;first=null;
+          },650);
+        }
+      }
+      deck.forEach((c,i)=>grid.appendChild(cardEl(i,c)));
+      app.querySelector('#m-reset').addEventListener('click',renderMatch);
+    }
+
+    /* =================== PLANT & SURVIVE =================== */
+    const PLANT_BEST_KEY='gg_plant_best_v2';
+    function renderPlant(){
+      const rows=6, cols=8;
+      let score=0, selection=null;
+      const best=Number(localStorage.getItem(PLANT_BEST_KEY)||0);
+      app.innerHTML=`
+        <section class="panel">
+          <h2>Plant & Survive</h2>
+          <div class="legend">Drag a species onto the land. Native choices grow (🌱→🌿→🌳); non-native/invasive fail (☠). On mobile, tap a chip, then a cell.</div>
+          <div class="toolbar mt-12">
+            <span class="kpi">Score: <b id="p-score">0</b></span>
+            <span class="kpi">Best: <b id="p-best">${best}</b></span>
+            <button class="btn" id="p-reset">Reset Grid</button>
+            <button class="btn" id="p-shuffle">Shuffle Palette</button>
+            <button class="btn" id="p-help">How scoring works</button>
+          </div>
+          <div class="row cols-2 mt-12">
+            <div class="panel">
+              <h3 class="mb-0">Species Palette</h3>
+              <div class="legend">Green tags are native. Red are non-native/invasive — included for learning.</div>
+              <div class="palette mt-12" id="p-palette"></div>
+            </div>
+            <div class="panel">
+              <h3 class="mb-0">Your Plot</h3>
+              <div class="legend">Goal: maximize natives. Each native +2, non-native −2. Click any cell for Explain.</div>
+              <div class="grid-plant mt-12" id="p-grid" style="--rows:${rows};--cols:${cols};"></div>
+              <div class="legend mt-12">Legend: 🌱 sapling → 🌿 juvenile → 🌳 mature; ☠ failed</div>
+            </div>
+          </div>
+        </section>
+
+        <div class="modal" id="p-modal">
+          <div class="modal-card">
+            <h3 id="pm-title">Explain</h3>
+            <p id="pm-body">...</p>
+            <div class="mt-12"><button class="btn" id="pm-close">Close</button></div>
+          </div>
+        </div>
+      `;
+      const elScore=app.querySelector('#p-score');
+      const elBest=app.querySelector('#p-best');
+      const elGrid=app.querySelector('#p-grid');
+      const elPalette=app.querySelector('#p-palette');
+      const modal=app.querySelector('#p-modal');
+      const pmTitle=app.querySelector('#pm-title');
+      const pmBody=app.querySelector('#pm-body');
+
+      const updateKpis=()=>{
+        elScore.textContent=String(score);
+        if(score>Number(localStorage.getItem(PLANT_BEST_KEY)||0)){
+          localStorage.setItem(PLANT_BEST_KEY,String(score));
+          elBest.textContent=String(score);
+        }
+      };
+      const shuffleList=a=>{a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+
+      function renderPalette(list){
+        elPalette.innerHTML='';
+        list.forEach(s=>{
+          const chip=document.createElement('div');
+          chip.className='chip';chip.draggable=true;chip.dataset.sid=s.id;
+          chip.innerHTML=`${s.native?'🌳':'🚫'} ${s.name}`;
+          chip.title=s.badges.join(', ');
+          chip.addEventListener('dragstart',e=>{e.dataTransfer.setData('text/plain',s.id)});
+          chip.addEventListener('click',()=>{selection=s.id;chip.style.outline='2px solid #10b981';setTimeout(()=>chip.style.outline='',600)});
+          elPalette.appendChild(chip);
+        });
+      }
+
+      function explain(s){
+        pmTitle.textContent=s.name;
+        const badge=s.native?'✅ Native':(s.badges.includes('invasive')?'☠ Invasive':'🚫 Non-native');
+        const benefits=s.benefits?.length?('<ul>'+s.benefits.map(b=>'<li>'+b+'</li>').join('')+'</ul>'):'';
+        pmBody.innerHTML=`<b>Status:</b> ${badge}<br><br>${s.explain}<br>${benefits}`;
+        modal.classList.add('show');
+      }
+
+      function evaluate(sid){
+        const s=speciesById(sid); if(!s) return {ok:false,reason:'Unknown species'};
+        if(s.native) return {ok:true,reason:'Native-first — good for local ecology.'};
+        const tag=s.badges.includes('invasive')?'invasive':'non-native';
+        return {ok:false,reason:'This is '+tag+' here. Prefer a comparable native.'};
+      }
+
+      function cellEl(){
+        const cell=document.createElement('div');
+        cell.className='cell';cell.textContent='·';
+        cell.addEventListener('dragover',e=>e.preventDefault());
+        cell.addEventListener('drop',e=>{e.preventDefault();const sid=e.dataTransfer.getData('text/plain');place(cell,sid)});
+        cell.addEventListener('click',()=>{if(selection) place(cell,selection); else if(cell.dataset.sid) explain(speciesById(cell.dataset.sid));});
+        return cell;
+      }
+
+      function grow(cell){
+        cell.classList.remove('dead');cell.classList.add('grow1');cell.textContent='🌱';
+        setTimeout(()=>{cell.classList.replace('grow1','grow2');cell.textContent='🌿'},600);
+        setTimeout(()=>{cell.classList.replace('grow2','grow3');cell.textContent='🌳'},1200);
+      }
+      function wither(cell){
+        cell.classList.remove('grow1','grow2','grow3');cell.classList.add('dead');cell.textContent='☠';
+      }
+
+      function place(cell,sid){
+        if(cell.dataset.sid){ explain(speciesById(cell.dataset.sid)); return; }
+        const res=evaluate(sid); cell.dataset.sid=sid;
+        if(res.ok){ score+=2; updateKpis(); grow(cell); } else { score=Math.max(0,score-2); updateKpis(); wither(cell); }
+        cell.title=res.reason+' (click to Explain)';
+        setTimeout(()=>explain(speciesById(sid)),250);
+      }
+
+      // Init
+      const nativesFirst=[...SPECIES].sort((a,b)=>Number(b.native)-Number(a.native));
+      renderPalette(nativesFirst);
+      for(let r=0;r<rows;r++){ for(let c=0;c<cols;c++){ elGrid.appendChild(cellEl()); } }
+      updateKpis();
+
+      // Controls
+      app.querySelector('#p-reset').addEventListener('click',renderPlant);
+      app.querySelector('#p-shuffle').addEventListener('click',()=>renderPalette(shuffleList(SPECIES)));
+      app.querySelector('#p-help').addEventListener('click',()=>{
+        pmTitle.textContent='Scoring';
+        pmBody.innerHTML='<ul><li>+2 for each native placed (🌱→🌿→🌳).</li><li>−2 for each non-native/invasive (☠).</li><li>Click any cell to see Explain and learn why.</li></ul>';
+        modal.classList.add('show');
+      });
+      app.querySelector('#pm-close').addEventListener('click',()=>modal.classList.remove('show'));
+      modal.addEventListener('click',e=>{if(e.target===modal) modal.classList.remove('show')});
+    }
+  </script>
+</body>
+</html>
