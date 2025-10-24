@@ -83,23 +83,40 @@ def create_app():
         except PyMongoError as e:
             return jsonify(ok=False, db="down", error=str(e)), 500
 
-    # SPA fallback (so /games reload doesn’t 404)
-    def serve_spa_index():
+    # Root endpoint - API info instead of frontend
+    @app.get("/")
+    def api_root():
+        return jsonify({
+            "message": "Verdantia API is running successfully!",
+            "status": "success",
+            "version": "1.0.0",
+            "endpoints": {
+                "health": "/health",
+                "auth": "/api/auth",
+                "recommendations": "/api/recommendations",
+                "compliance": "/api/compliance",
+                "gamification": "/api/gamification"
+            }
+        })
+
+    # Optional: Serve frontend if it exists, otherwise return 404
+    @app.get("/<path:path>")
+    def catch_all(path):
+        # Check if it's a static file in frontend/dist
+        frontend_file = os.path.join(app.config["FRONTEND_DIR"], path)
+        if os.path.isfile(frontend_file):
+            return send_from_directory(app.config["FRONTEND_DIR"], path)
+        
+        # Check if frontend index.html exists for SPA routing
         index_path = os.path.join(app.config["FRONTEND_DIR"], "index.html")
         if os.path.exists(index_path):
             return send_from_directory(app.config["FRONTEND_DIR"], "index.html")
-        return jsonify(error="frontend_not_built"), 501
-
-    @app.get("/")
-    def spa_root():
-        return serve_spa_index()
-
-    @app.get("/<path:path>")
-    def spa_catch_all(path):
-        full = os.path.join(app.config["FRONTEND_DIR"], path)
-        if os.path.isfile(full):
-            return send_from_directory(app.config["FRONTEND_DIR"], path)
-        return serve_spa_index()
+        
+        # No frontend found, return 404
+        return jsonify({
+            "error": "Not found",
+            "message": "This endpoint does not exist. Visit / for available API endpoints."
+        }), 404
 
     return app
 
